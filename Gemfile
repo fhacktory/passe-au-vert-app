@@ -43,8 +43,39 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+
+  gem 'pry-rails'
+  #gem 'pry-nav'
+
+  # Guard::LiveReload automatically reload your browser when 'view' files are modified.
+  # Not working
+  # gem 'guard-livereload', require: false
+
+  gem 'awesome_print'
+  gem 'better_errors'
+  gem 'binding_of_caller'  # Advanced mode for better_errors
+  gem 'bullet'
+  gem 'quiet_assets'
+
+  # Use debugger
+  # gem 'debugger'
+
+  # Process manager for applications with multiple components
+  gem 'foreman'
+
+  # Test
+  gem 'capybara'
+  gem 'launchy'
+  gem 'guard-rspec'
+  gem 'rspec-rails'
+  gem 'timecop'
+
+  gem 'traceroute'
+  gem 'selenium-webdriver'
 end
 
 group :production do
   gem 'pg'
+  # Serve assets
+  gem 'rails_12factor'
 end

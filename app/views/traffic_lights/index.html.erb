@@ -150,7 +150,6 @@ function addTrafficLights() {
 
 function geolocateMeAndUpdateTrafficLights() {
   return geolocateMe(getTrafficLightsAsync(function (data) {
-    console.log('geolocateMeAndUpdateTrafficLights');
     console.log(data);
     // TODO redisplay trafficLights
   }));

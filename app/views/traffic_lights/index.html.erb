@@ -2,6 +2,16 @@
 
 var map;
 
+var trafficLightMapIcon = {
+  url: '/images/radar-feu.png',
+  size: new google.maps.Size(10,25),
+  anchor: new google.maps.Point(5,12)
+};
+
+var trafficLights = [ <%= @traffic_lights.map { |traffic_light|
+  traffic_light.to_map_info
+}.join(',').html_safe %> ];
+
 function initialize() {
   var mapOptions = {
     center: { lat: -34.397, lng: 150.644},
@@ -11,6 +21,7 @@ function initialize() {
       mapOptions);
 
   geolocateMe();
+  addTrafficLights();
 }
 
 function geolocateMe() {
@@ -26,6 +37,7 @@ function geolocateMe() {
         position: pos,
         content: 'Me'
       });
+      console.log('position', { latitude: position.coords.latitude, longitude: position.coords.longitude });
 
       map.setCenter(pos);
     }, function() {
@@ -54,6 +66,27 @@ function handleNoGeolocation(errorFlag) {
   map.setCenter(options.position);
 }
 
+function addTrafficLightMarker(trafficLight) {
+  var content, position, markerOptions, marker;
+
+  position = new google.maps.LatLng(trafficLight.latitude, trafficLight.longitude);
+  
+  markerOptions = {
+    position: position,
+    map: map,
+    icon: trafficLightMapIcon,
+    title: trafficLight.title
+  }
+  marker = new google.maps.Marker(markerOptions);
+
+  content = trafficLight.content;
+
+  console.log('addTrafficLightMarker(trafficLight);', trafficLight);
+
+  bindInfoWindow(marker, content);
+}
+
+var infoBulle = new google.maps.InfoWindow();
 function bindInfoWindow(marker, info) {
   google.maps.event.addListener(marker, 'click', function() {
     infoBulle.setContent(info);
@@ -61,33 +94,10 @@ function bindInfoWindow(marker, info) {
   });
 }
 
-
-var trafficLights = [ <%= @traffic_lights.map { |traffic_light|
-  traffic_light.to_map_info
-}.join(',').html_safe %> ];
-
-var trafficLightMapIcon = {
-  url: '/images/radar-feu.png',
-  size: new google.maps.Size(10,25),
-  anchor: new google.maps.Point(5,12)
-};
-
-var content, position, markerOptions, marker;
-
-for (var i = 0; i < trafficLights.length; i++) {
-  position = new google.maps.LatLng(trafficLights[i].latitude, trafficLights[i].longitude);
-  
-  markerOptions = {
-    position: position,
-    map: map,
-    icon: trafficLightMapIcon,
-    title: trafficLights[i].title
+function addTrafficLights() {
+  for (var i = 0; i < trafficLights.length; i++) {
+    addTrafficLightMarker(trafficLights[i]);
   }
-  marker = new google.maps.Marker(markerOptions);
-
-  content = trafficLights[i].content;
-
-  bindInfoWindow(marker, content);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

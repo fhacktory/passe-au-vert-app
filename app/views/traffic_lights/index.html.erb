@@ -62,9 +62,9 @@ function bindInfoWindow(marker, info) {
 }
 
 
-var trafficLights = <%= @traffic_lights.map { |traffic_light|
+var trafficLights = [ <%= @traffic_lights.map { |traffic_light|
   traffic_light.to_map_info
-}.join.html_safe %>;
+}.join(',').html_safe %> ];
 
 var trafficLightMapIcon = {
   url: '/images/radar-feu.png',

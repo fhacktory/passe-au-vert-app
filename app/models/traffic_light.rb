@@ -13,7 +13,7 @@ class TrafficLight < ActiveRecord::Base
   	  attributes = row.to_h
   	  data_id = attributes.delete('id') || attributes.delete(nil)
 
-  	  traffic_light = first_or_initialize(data_id: data_id)
+  	  traffic_light = where(data_id: data_id).first_or_initialize
   	  traffic_light.assign_attributes(attributes)
   	  traffic_light.save!
 

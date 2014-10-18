@@ -1,5 +1,7 @@
 == README
 
+[ ![Codeship Status for fhacktory/passe-au-vert](https://www.codeship.io/projects/5ed6d4a0-38e7-0132-bd39-323ac9d2f255/status)](https://www.codeship.io/projects/42115)
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

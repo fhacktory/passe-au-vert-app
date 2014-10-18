@@ -15,6 +15,10 @@ class TrafficLight < ActiveRecord::Base
     within(distance, origin: [latitude, longitude]).limit(limit)
   end
 
+  def self.ids_with_data_points
+    DataPoint.pluck(:traffic_light_id).uniq
+  end
+
   # Reentrant import.
   def self.import(filename = Rails.root.join('public/feux.csv'))
   	traffic_lights_imported = []
@@ -34,6 +38,10 @@ class TrafficLight < ActiveRecord::Base
 
     traffic_lights_imported
 	end
+
+  def self.with_data_points
+    where(id: ids_with_data_points)
+  end
 
 
 	def to_map_info

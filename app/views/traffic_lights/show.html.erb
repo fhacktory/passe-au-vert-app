@@ -26,3 +26,9 @@ $(function() {
 });
 
 </script>
+
+<% if @traffic_light.computed_data? %>
+	<h3>Informations</h3>
+	<% if @traffic_light.cycle_time %><p>Temps de cycle: <%= @traffic_light.cycle_time %>s</p><% end %>
+	<% if @traffic_light.offset %><p>Décalage: <%= @traffic_light.offset %>s</p><% end %>
+<% end %>

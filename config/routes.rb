@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   root 'traffic_lights#index'
 
-  resources :traffic_lights, only: :index
+  resources :traffic_lights, only: [:index, :show] do
+    collection do
+      get :close_to
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

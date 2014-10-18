@@ -4,21 +4,28 @@
 
     <title>Passe au vert !</title>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<%#= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 	<%#= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 	<%#= csrf_meta_tags %>
 
-    <style type="text/css">
-      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
-    </style>
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmfud_lopWEA36xRko3DmURyEi0v1qCY4">
-    </script>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+  <style type="text/css">
+    html, body, #map-canvas { height: 100%; margin: 0; padding: 0; text-align: center; }
+    a { text-decoration: none; }
+    #brand a { color: #00FF00; }
+    #geolocation-loading { display: none; }
+  </style>
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmfud_lopWEA36xRko3DmURyEi0v1qCY4">
+  </script>
 
   </head>
   <body>
 
-	<h1>Passe au vert !</h1>
+	<h1 id="brand"><a href="/">Passe au vert !</a></h1>
 
 <%= yield %>
 

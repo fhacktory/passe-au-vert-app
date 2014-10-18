@@ -1,7 +1,18 @@
 class TrafficLight < ActiveRecord::Base
 
+  acts_as_mappable default_units: :kms,
+                   default_formula: :sphere,
+                   # distance_field_name: :distance,
+                   lat_column_name: :latitude,
+                   lng_column_name: :longitude
+
   validates_presence_of :latitude, :longitude
   validates_uniqueness_of :data_id
+
+
+  def self.close_to(latitude: latitude, longitude: longitude, distance: 5, limit: 20)
+    within(distance, origin: [latitude, longitude]).limit(limit)
+  end
 
   # Reentrant import.
   def self.import(filename = Rails.root.join('public/feux.csv'))
@@ -23,13 +34,13 @@ class TrafficLight < ActiveRecord::Base
     traffic_lights_imported
 	end
 
+
 	def to_map_info
     {
-      title: "ID #{id}",
-      content: "Position: #{latitude}, #{longitude}",
+      id: id,
       latitude: latitude,
       longitude: longitude
-    }.to_json
+    }
   end
 
 end

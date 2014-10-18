@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>PasseAuVert</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <head>
+
+    <title>Passe au vert !</title>
+
+	<%#= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+	<%#= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+	<%#= csrf_meta_tags %>
+
+    <style type="text/css">
+      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmfud_lopWEA36xRko3DmURyEi0v1qCY4">
+    </script>
+
+  </head>
+  <body>
+
+	<h1>Passe au vert !</h1>
 
 <%= yield %>
 
-</body>
+  </body>
 </html>

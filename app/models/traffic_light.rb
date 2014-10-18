@@ -11,6 +11,9 @@ class TrafficLight < ActiveRecord::Base
   validates_presence_of :latitude, :longitude
   validates_uniqueness_of :data_id
 
+  MAXIMUM_TIME_BETWEEN_POINTS = 40 # In seconds
+
+
   def self.close_to(latitude: latitude, longitude: longitude, distance: 5, limit: 20)
     within(distance, origin: [latitude, longitude]).limit(limit)
   end
@@ -43,6 +46,28 @@ class TrafficLight < ActiveRecord::Base
     where(id: ids_with_data_points)
   end
 
+
+  # TODO
+  # Data in seconds.
+  def compute_data
+    data_points_by_time = data_points.order('created_at ASC')
+
+    cycle_time = if data_points_by_time.count > 1
+      data_points_by_time.last - data_points_by_time.first
+    else
+      nil
+    end
+
+    {
+      cycle_time: cycle_time,
+      offset: rand(1..80)
+    }
+  end
+
+  def compute_data!
+    assign_attributes(compute_data)
+    save!
+  end
 
 	def to_map_info
     {

@@ -1,6 +1,6 @@
 # README
 
-[ ![Codeship Status for fhacktory/passe-au-vert](https://www.codeship.io/projects/5ed6d4a0-38e7-0132-bd39-323ac9d2f255/status)](https://www.codeship.io/projects/42115)
+[ ![Codeship Status for fhacktory/passe-au-vert](https://www.codeship.io/projects/f3079710-38ed-0132-bd39-323ac9d2f255/status)](https://www.codeship.io/projects/42120)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.

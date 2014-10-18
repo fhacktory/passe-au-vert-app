@@ -58,50 +58,50 @@ class TrafficLight < ActiveRecord::Base
     data_points_by_time = data_points.order('created_at ASC')
     if data_points_by_time.count > 2
 
-      red_to_greens = data_points_by_time.where(changed_state: :red_to_green)
-      cycle_time_by_red_to_greens = if red_to_greens.any?
-        (red_to_greens.last - red_to_greens.first) / red_to_greens.count
+      red_to_greens = data_points_by_time.with_changed_state(:red_to_green)
+      cycle_time_by_red_to_greens = if red_to_greens.count >= 2
+        (red_to_greens.last.created_at - red_to_greens.first.created_at).to_f / (red_to_greens.count - 1)
       else
         0
       end
 
-      green_to_oranges = data_points_by_time.where(changed_state: :green_to_orange)
-      cycle_time_by_green_to_oranges = if green_to_oranges.any?
-        (green_to_oranges.last - green_to_oranges.first) / green_to_oranges.count
+      green_to_oranges = data_points_by_time.with_changed_state(:green_to_orange)
+      cycle_time_by_green_to_oranges = if green_to_oranges.count >= 2
+        (green_to_oranges.last.created_at - green_to_oranges.first.created_at).to_f / (green_to_oranges.count - 1)
       else
         0
       end
 
-      if red_to_greens.any? || green_to_oranges.any?
+      if (cycle_time_by_red_to_greens + cycle_time_by_green_to_oranges) > 0
         cycle_time = (cycle_time_by_red_to_greens * red_to_greens.count + cycle_time_by_green_to_oranges * green_to_oranges.count) /
                      (red_to_greens.count + green_to_oranges.count)
-      else
-        return
-      end
 
-      accumulated_green_time = 0
-      accumulated_green_time_count = 0
-      accumulated_offset = 0
+        accumulated_green_time = 0
+        accumulated_green_time_count = 0
+        accumulated_offset = 0
 
-      red_to_greens.each do |red_to_green|
-        accumulated_offset += (red_to_green.created_at % cycle_time)
+        red_to_greens.each do |red_to_green|
+          accumulated_offset += (red_to_green.created_at.to_i % cycle_time)
 
-        if next_data_point = data_points_by_time.where('created_at > ?', red_to_green.created_at).first
-          if next_data_point.changed_state != :red_to_green
-            accumulated_green_time += next_data_point.created_at - red_to_green.created_at
-            accumulated_green_time_count +=1
+          if next_data_point = data_points_by_time.where('created_at > ?', red_to_green.created_at).first
+            if next_data_point.changed_state != :red_to_green
+              accumulated_green_time += next_data_point.created_at - red_to_green.created_at
+              accumulated_green_time_count +=1
+            end
           end
         end
+
+        offset = accumulated_offset.to_f / red_to_greens.count if red_to_greens.any?
+        green_time = accumulated_green_time.to_f / accumulated_green_time_count if accumulated_green_time_count > 0
+
+        {
+          cycle_time: cycle_time,
+          green_time: green_time,
+          offset: offset
+        }
+
       end
 
-      offset = accumulated_offset.to_f / red_to_greens.count if red_to_greens.any?
-      green_time = accumulated_green_time.to_f / accumulated_green_time_count if accumulated_green_time_count > 0
-
-      {
-        cycle_time: cycle_time,
-        green_time: green_time,
-        offset: offset
-      }
     end
   end
 

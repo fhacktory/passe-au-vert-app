@@ -19,7 +19,9 @@ class TrafficLight < ActiveRecord::Base
   end
 
   def self.compute_data!
-    with_data_points.map(&:compute_data!)
+    with_data_points.map { |traffic_light|
+      (traffic_light.compute_data! || {}).merge(id: traffic_light.id)
+    }.compact
   end
 
   def self.ids_with_data_points
@@ -51,30 +53,91 @@ class TrafficLight < ActiveRecord::Base
   end
 
 
-  # TODO
   # Data in seconds.
   def compute_data
     data_points_by_time = data_points.order('created_at ASC')
+    if data_points_by_time.count > 2
 
-    cycle_time = if data_points_by_time.count > 1
-      data_points_by_time.last - data_points_by_time.first
-    else
-      nil
+      red_to_greens = data_points_by_time.where(changed_state: :red_to_green)
+      cycle_time_by_red_to_greens = if red_to_greens.any?
+        (red_to_greens.last - red_to_greens.first) / red_to_greens.count
+      else
+        0
+      end
+
+      green_to_oranges = data_points_by_time.where(changed_state: :green_to_orange)
+      cycle_time_by_green_to_oranges = if green_to_oranges.any?
+        (green_to_oranges.last - green_to_oranges.first) / green_to_oranges.count
+      else
+        0
+      end
+
+      if red_to_greens.any? || green_to_oranges.any?
+        cycle_time = (cycle_time_by_red_to_greens * red_to_greens.count + cycle_time_by_green_to_oranges * green_to_oranges.count) /
+                     (red_to_greens.count + green_to_oranges.count)
+      else
+        return
+      end
+
+      accumulated_green_time = 0
+      accumulated_green_time_count = 0
+      accumulated_offset = 0
+
+      red_to_greens.each do |red_to_green|
+        accumulated_offset += (red_to_green.created_at % cycle_time)
+
+        if next_data_point = data_points_by_time.where('created_at > ?', red_to_green.created_at).first
+          if next_data_point.changed_state != :red_to_green
+            accumulated_green_time += next_data_point.created_at - red_to_green.created_at
+            accumulated_green_time_count +=1
+          end
+        end
+      end
+
+      offset = accumulated_offset.to_f / red_to_greens.count if red_to_greens.any?
+      green_time = accumulated_green_time.to_f / accumulated_green_time_count if accumulated_green_time_count > 0
+
+      {
+        cycle_time: cycle_time,
+        green_time: green_time,
+        offset: offset
+      }
     end
-
-    {
-      cycle_time: cycle_time,
-      offset: rand(1..80)
-    }
   end
 
   def compute_data!
-    assign_attributes(compute_data)
-    save!
+    if _compute_data = compute_data
+      assign_attributes(_compute_data)
+      save!
+
+      _compute_data
+    end
   end
 
   def computed_data?
     cycle_time.present? || offset.present?
+  end
+
+  def state_at(time = Time.now)
+    if offset && cycle_time && green_time
+
+      time_offset = (time - offset) % cycle_time
+      if time_offset < green_time
+        state = :green
+        time_left = green_time - time_offset
+      else
+        state = :red
+        time_left = cycle_time - time_offset
+      end
+
+      if state && time_left
+        {
+          state: state,
+          time_left: time_left
+        }
+      end
+
+    end
   end
 
 	def to_map_info

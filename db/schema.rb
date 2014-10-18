@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141018201612) do
+ActiveRecord::Schema.define(version: 20141018214526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20141018201612) do
     t.integer  "data_id"
     t.float    "cycle_time"
     t.float    "offset"
+    t.float    "green_time"
   end
 
 end

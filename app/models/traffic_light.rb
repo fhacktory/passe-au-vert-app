@@ -18,6 +18,10 @@ class TrafficLight < ActiveRecord::Base
     within(distance, origin: [latitude, longitude]).limit(limit)
   end
 
+  def self.compute_data!
+    with_data_points.map(&:compute_data!)
+  end
+
   def self.ids_with_data_points
     DataPoint.pluck(:traffic_light_id).uniq
   end
@@ -67,6 +71,10 @@ class TrafficLight < ActiveRecord::Base
   def compute_data!
     assign_attributes(compute_data)
     save!
+  end
+
+  def computed_data?
+    cycle_time.present? || offset.present?
   end
 
 	def to_map_info

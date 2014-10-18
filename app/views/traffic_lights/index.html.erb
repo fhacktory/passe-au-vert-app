@@ -1,3 +1,7 @@
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmfud_lopWEA36xRko3DmURyEi0v1qCY4">
+</script>
+
 <script type="text/javascript">
 
 // Settings
@@ -156,8 +160,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 setInterval(geolocateMe, UPDATE_MY_POSITION_INTERVAL);
 </script>
 
-<p id="geolocation-loading">Geolocation in progress...</p>
+<p id="geolocation-loading" class="hidden">Geolocation in progress...</p>
 
-<p><a href="#" onClick="geolocateMe();" class="btn">Me géolocaliser</a></p>
+<p><button id="geolocateMe" onClick="geolocateMe();" class="btn">Me géolocaliser</button></p>
 
 <div id="map-canvas"></div>

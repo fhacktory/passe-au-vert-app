@@ -7,6 +7,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :data_points, only: :create do
+    collection do
+      get '' => :create
+    end
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

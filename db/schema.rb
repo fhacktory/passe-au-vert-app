@@ -11,10 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141018124210) do
+ActiveRecord::Schema.define(version: 20141018163154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "data_points", force: true do |t|
+    t.integer  "traffic_light_id"
+    t.datetime "created_at"
+    t.integer  "changed_state"
+  end
+
+  add_index "data_points", ["traffic_light_id"], name: "index_data_points_on_traffic_light_id", using: :btree
 
   create_table "traffic_lights", force: true do |t|
     t.float    "latitude"

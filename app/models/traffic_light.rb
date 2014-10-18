@@ -6,9 +6,10 @@ class TrafficLight < ActiveRecord::Base
                    lat_column_name: :latitude,
                    lng_column_name: :longitude
 
+  has_many :data_points
+
   validates_presence_of :latitude, :longitude
   validates_uniqueness_of :data_id
-
 
   def self.close_to(latitude: latitude, longitude: longitude, distance: 5, limit: 20)
     within(distance, origin: [latitude, longitude]).limit(limit)

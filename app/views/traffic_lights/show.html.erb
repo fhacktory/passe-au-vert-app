@@ -1,4 +1,5 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
+<h3 class="trafficLightRemainingTime"></h3>
 
 <% if traffic_light_state = @traffic_light.state %>
 
@@ -8,7 +9,7 @@
 	<img id="trafficLightGreen" class="trafficLightColor hidden" alt="Green" src="/images/traffic_light_green.svg" />
 </p>
 
-<p id="trafficLightRemainingTime" style="z-index: 2;"></p>
+<p class="trafficLightRemainingTime" style="z-index: 2;"></p>
 
 <script type="text/javascript">
 
@@ -45,7 +46,7 @@ function updateTrafficLigth() {
 		nextState();
 	}
 	
-	$('#trafficLightRemainingTime').html((remaining_time / 1000).toFixed(2) + ' s');
+	$('.trafficLightRemainingTime').html((remaining_time / 1000).toFixed(2) + ' s');
 }
 
 $(function() {

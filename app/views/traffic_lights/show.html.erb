@@ -1,9 +1,9 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
 
 <% if traffic_light_state = @traffic_light.state %>
-	<p id="trafficLightRed" clas="trafficLightColor hidden"><button class="dataPointReport">Rouge</button></p>
-	<p id="trafficLightOrange" clas="trafficLightColor hidden"><button class="dataPointReport">Orange</button></p>
-	<p id="trafficLightGreen" clas="trafficLightColor hidden"><button class="dataPointReport">Green</button></p>
+	<p id="trafficLightRed" class="trafficLightColor hidden"><button class="dataPointReport">Rouge</button></p>
+	<p id="trafficLightOrange" class="trafficLightColor hidden"><button class="dataPointReport">Orange</button></p>
+	<p id="trafficLightGreen" class="trafficLightColor hidden"><button class="dataPointReport">Green</button></p>
 
 	<p id="trafficLightRemainingTime"></p>
 <% else %>
@@ -45,7 +45,7 @@ function updateTrafficLigth() {
 		nextState();
 	}
 	
-	$('#trafficLightRemainingTime').html((remaining_time / 1000) + 's');
+	$('#trafficLightRemainingTime').html((remaining_time / 1000).toFixed(2) + 's');
 }
 
 setInterval(updateTrafficLigth, interval);

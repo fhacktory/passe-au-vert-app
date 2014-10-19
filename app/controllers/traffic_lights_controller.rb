@@ -18,6 +18,7 @@ class TrafficLightsController < ApplicationController
   end
 
   def data_points
+    @allow_window_scroll = true
   end
 
   private

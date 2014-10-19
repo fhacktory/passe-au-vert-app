@@ -33,3 +33,175 @@ $(function() {
 	<% if @traffic_light.green_time %><p>Durée du vert: <%= @traffic_light.green_time %>s</p><% end %>
 	<% if @traffic_light.offset %><p>Décalage: <%= @traffic_light.offset %>s</p><% end %>
 <% end %>
+
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmfud_lopWEA36xRko3DmURyEi0v1qCY4">
+</script>
+
+<script type="text/javascript">
+
+// Settings
+
+var DEFAULT_MAP_ZOOM = 15, // From 0.7 to 18 (more precize)
+    UPDATE_MY_POSITION_INTERVAL = 2000; // In milliseconds
+
+// Design
+
+var trafficLightMapIcon = {
+  url: '/images/radar-feu.png',
+  size: new google.maps.Size(10,25),
+  anchor: new google.maps.Point(5,12)
+};
+
+// Data
+
+var trafficLights = [ <%= [@traffic_light].map { |traffic_light|
+  traffic_light.to_map_info.to_json
+}.join(',').html_safe %> ];
+
+function getTrafficLightsAsync(done) {
+  return function (latitude, longitude) {
+    return $.ajax({ url: '/traffic_lights/close_to?latitude='+latitude+'&longitude='+longitude }).done(done);
+  };
+}
+
+// Map
+
+var map, myPositionMarker;
+
+function initialize() {
+  var mapOptions = {
+    // center: { lat: -34.397, lng: 150.644},
+    zoom: DEFAULT_MAP_ZOOM
+  }, trafficLight, trafficLightPosition;
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  // geolocateMe();
+  addTrafficLights();
+
+  trafficLight = trafficLights[0];
+  trafficLightPosition = new google.maps.LatLng(trafficLight.latitude, trafficLight.longitude);
+  map.setCenter(trafficLightPosition);
+}
+
+function geolocateMe(done) {
+  $('#geolocation-loading').show();
+
+  // Try HTML5 geolocation
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+      var pos = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);
+
+      /*
+      var infowindow = new google.maps.InfoWindow({
+        map: map,
+        position: pos,
+        content: 'Me'
+      });
+      */
+      updateMyPositionMarker(pos);
+
+      map.setCenter(pos);
+
+      if (done) {
+        return done(position.coords.latitude, position.coords.longitude);
+      }
+    }, function() {
+      handleNoGeolocation(true);
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleNoGeolocation(false);
+  }
+
+  $('#geolocation-loading').hide();
+}
+
+function handleNoGeolocation(errorFlag) {
+  if (errorFlag) {
+    var content = 'Error: The Geolocation service failed.';
+  } else {
+    var content = 'Error: Your browser doesn\'t support geolocation.';
+  }
+
+  var options = {
+    map: map,
+    position: new google.maps.LatLng(60, 105),
+    content: content
+  };
+
+  var infowindow = new google.maps.InfoWindow(options);
+  map.setCenter(options.position);
+}
+
+function updateMyPositionMarker(position) {
+  if (!myPositionMarker) {
+    var myPositionMarkerOptions = {
+      position: position,
+      map: map,
+      title: 'Me'
+    };
+    myPositionMarker = new google.maps.Marker(myPositionMarkerOptions);
+  }
+  
+  myPositionMarker.setPosition(position);
+}
+
+function trafficLightContent(trafficLight) {
+  return '<a href="<%= traffic_light_path(id: '') %>'+ trafficLight.id +'" style="text-decoration: none;"><strong>Feu n°'+ trafficLight.id +'</strong></a><br>'
+          +'Position: '+ trafficLight.latitude +', '+ trafficLight.longitude+'<br>'
+          +'<a href="'+ '<%= data_points_traffic_light_path(id: 888) %>'.replace(888, trafficLight.id) +'" style="text-decoration: none;">Contribuer</a>';
+
+}
+
+function addTrafficLightMarker(trafficLight) {
+  var content, position, markerOptions, marker;
+
+  position = new google.maps.LatLng(trafficLight.latitude, trafficLight.longitude);
+  
+  markerOptions = {
+    position: position,
+    map: map,
+    icon: trafficLightMapIcon,
+    title: 'Feu n° '+ trafficLight.id
+  }
+  marker = new google.maps.Marker(markerOptions);
+
+  content = trafficLightContent(trafficLight);
+
+  bindInfoWindow(marker, content);
+}
+
+var infoBulle = new google.maps.InfoWindow();
+function bindInfoWindow(marker, info) {
+  google.maps.event.addListener(marker, 'click', function() {
+    infoBulle.setContent(info);
+    infoBulle.open(map, marker);
+  });
+}
+
+function addTrafficLights() {
+  for (var i = 0; i < trafficLights.length; i++) {
+    addTrafficLightMarker(trafficLights[i]);
+  }
+}
+
+function geolocateMeAndUpdateTrafficLights() {
+  return geolocateMe(getTrafficLightsAsync(function (data) {
+    console.log(data);
+    // TODO redisplay trafficLights
+  }));
+};
+
+google.maps.event.addDomListener(window, 'load', initialize);
+// setInterval(geolocateMe, UPDATE_MY_POSITION_INTERVAL);
+</script>
+
+<p id="geolocation-loading" class="hidden">Geolocation in progress...</p>
+
+<p><button id="geolocateMe" onClick="geolocateMe();" class="btn">Me géolocaliser</button></p>
+
+<div id="map-canvas"></div>

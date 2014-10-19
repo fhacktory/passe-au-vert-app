@@ -1,14 +1,11 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
 
 <% if traffic_light_state = @traffic_light.state %>
-	<p id="trafficLightRed" class="trafficLightColor hidden"><button class="dataPointReport">Rouge</button></p>
-	<p id="trafficLightOrange" class="trafficLightColor hidden"><button class="dataPointReport">Orange</button></p>
-	<p id="trafficLightGreen" class="trafficLightColor hidden"><button class="dataPointReport">Green</button></p>
+	<p id="trafficLightRed" class="trafficLightColor hidden"><button id="dataPointRed" class="dataPointReport">Rouge</button></p>
+	<p id="trafficLightOrange" class="trafficLightColor hidden"><button id="dataPointOrange" class="dataPointReport">Orange</button></p>
+	<p id="trafficLightGreen" class="trafficLightColor hidden"><button id="dataPointGreen" class="dataPointReport">Green</button></p>
 
 	<p id="trafficLightRemainingTime"></p>
-<% else %>
-  <p>Données indisponibles pour ce feu.</p>
-<% end %>
 
 <script type="text/javascript">
 
@@ -21,7 +18,7 @@ var red_time = cycle_time - green_time - orange_time;
 
 var remaining_time = <%= traffic_light_state[:remaining_time] %> * 1000;
 
-var interval = 300;
+var interval = 150;
 
 function nextState() {
 	if (state === "Red") {
@@ -31,7 +28,7 @@ function nextState() {
 		remaining_time = orange_time + remaining_time;
 		state = "Orange";
 	} else {
-		red_time = orange_time + remaining_time;
+		red_time = red_time + remaining_time;
 		state = "Red";
 	}
 
@@ -45,9 +42,16 @@ function updateTrafficLigth() {
 		nextState();
 	}
 	
-	$('#trafficLightRemainingTime').html((remaining_time / 1000).toFixed(2) + 's');
+	$('#trafficLightRemainingTime').html((remaining_time / 1000).toFixed(2) + ' s');
 }
 
-setInterval(updateTrafficLigth, interval);
+$(function() {
+	$('#trafficLight' + state).show();
+	setInterval(updateTrafficLigth, interval);
+});
 
 </script>
+
+<% else %>
+  <p>Données indisponibles pour ce feu.</p>
+<% end %>

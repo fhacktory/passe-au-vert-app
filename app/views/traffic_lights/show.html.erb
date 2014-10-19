@@ -1,5 +1,4 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
-<h3 class="trafficLightRemainingTime"></h3>
 
 <% if traffic_light_state = @traffic_light.state %>
 
@@ -9,11 +8,17 @@
 	<img id="trafficLightGreen" class="trafficLightColor hidden" alt="Green" src="/images/traffic_light_green.svg" />
 </p>
 
+<div id="countdown"></div>
 <p class="trafficLightRemainingTime" style="z-index: 2;"></p>
 
 <script type="text/javascript">
 
 var state = "<%= traffic_light_state[:state].to_s.camelize %>";
+var stateColor = {
+	'Red': '#FF0000',
+	'Green': '#00FF00',
+	'Red': '#0000FF'
+};
 
 var cycle_time = <%= @traffic_light.cycle_time %> * 1000;
 var green_time = <%= @traffic_light.green_time %> * 1000;
@@ -41,12 +46,23 @@ function nextState() {
 }
 
 function updateTrafficLigth() {
+	var seconds;
+
 	remaining_time -= interval;
 	if (remaining_time < 0) {
 		nextState();
 	}
 	
-	$('.trafficLightRemainingTime').html((remaining_time / 1000).toFixed(2) + ' s');
+	seconds = remaining_time / 1000;
+	$('.trafficLightRemainingTime').html(seconds.toFixed(2) + ' s');
+
+	$('#countdown').countdown360({
+		radius      : 60,
+		seconds     : seconds,
+		fontColor   : '#FFFFFF',
+		autostart   : true,
+		onComplete  : function() { $('#countdown').hide(); }
+	}).start();
 }
 
 $(function() {

@@ -29,9 +29,19 @@ var remaining_time = <%= traffic_light_state[:remaining_time] %> * 1000;
 var interval = 150;
 var updateTrafficLigth;
 
+function updateCountdown() {
+	var seconds = remaining_time / 1000;
+
+	$('#countdown').countdown360({
+		radius      : parseInt(seconds),
+		seconds     : Math.floor(seconds * 100) / 100,
+		fontColor   : stateColor[state],
+		autostart   : false,
+		onComplete  : function() { /*$('#countdown').hide();*/ }
+	}).start();
+}
+
 function nextState() {
-	var seconds;
-	
 	if (state === "Red") {
 		remaining_time = green_time + remaining_time;
 		state = "Green";
@@ -46,14 +56,7 @@ function nextState() {
 	$('.trafficLightColor').hide();
 	$('#trafficLight' + state).show();
 
-	seconds = remaining_time / 1000;
-	$('#countdown').countdown360({
-		radius      : parseInt(seconds),
-		seconds     : Math.floor(seconds * 100) / 100,
-		fontColor   : stateColor[state],
-		autostart   : false,
-		onComplete  : function() { /*$('#countdown').hide();*/ }
-	}).start();
+	updateCountdown();
 }
 
 $(function() {
@@ -67,6 +70,7 @@ $(function() {
 	};
 
 	$('#trafficLight' + state).show();
+	updateCountdown();
 	setInterval(updateTrafficLigth, interval);
 });
 

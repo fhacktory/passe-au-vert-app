@@ -1,11 +1,13 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
 
 <% if traffic_light_state = @traffic_light.state %>
-	<p id="trafficLightRed" class="trafficLightColor hidden"><button id="dataPointRed" class="dataPointReport">Rouge</button></p>
-	<p id="trafficLightOrange" class="trafficLightColor hidden"><button id="dataPointOrange" class="dataPointReport">Orange</button></p>
-	<p id="trafficLightGreen" class="trafficLightColor hidden"><button id="dataPointGreen" class="dataPointReport">Green</button></p>
+<p>
+	<img id="trafficLightRed" class="trafficLightColor hidden" alt="Red" src="traffic_light_red.svg" />
+	<img id="trafficLightOrange" class="trafficLightColor hidden" alt="Orange" src="traffic_light_orange.svg" />
+	<img id="trafficLightGreen" class="trafficLightColor hidden" alt="Green" src="traffic_light_green.svg" />
+</p>
 
-	<p id="trafficLightRemainingTime"></p>
+<p id="trafficLightRemainingTime"></p>
 
 <script type="text/javascript">
 
@@ -55,3 +57,5 @@ $(function() {
 <% else %>
   <p>Données indisponibles pour ce feu.</p>
 <% end %>
+
+<p><%= link_to 'Contribuer', data_points_traffic_light_path(@traffic_light) %></p>

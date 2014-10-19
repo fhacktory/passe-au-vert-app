@@ -29,9 +29,9 @@ $(function() {
 
 <% if @traffic_light.computed_data? %>
 	<h3>Informations</h3>
-	<% if @traffic_light.cycle_time %><p>Temps de cycle: <%= @traffic_light.cycle_time %>s</p><% end %>
-	<% if @traffic_light.green_time %><p>Durée du vert: <%= @traffic_light.green_time %>s</p><% end %>
-	<% if @traffic_light.offset %><p>Décalage: <%= @traffic_light.offset %>s</p><% end %>
+	<% if @traffic_light.cycle_time %><p>Temps de cycle: <%= @traffic_light.cycle_time.round(2) %>s</p><% end %>
+	<% if @traffic_light.green_time %><p>Durée du vert: <%= @traffic_light.green_time.round(2) %>s</p><% end %>
+	<% if @traffic_light.offset %><p>Décalage: <%= @traffic_light.offset.round(2) %>s</p><% end %>
 <% end %>
 
 <script type="text/javascript"

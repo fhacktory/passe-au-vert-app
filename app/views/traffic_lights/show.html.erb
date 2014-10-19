@@ -1,13 +1,14 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
 
 <% if traffic_light_state = @traffic_light.state %>
-<p>
+
+<p style="z-index: 1;">
 	<img id="trafficLightRed" class="trafficLightColor hidden" alt="Red" src="/images/traffic_light_red.svg" />
 	<img id="trafficLightOrange" class="trafficLightColor hidden" alt="Orange" src="/images/traffic_light_orange.svg" />
 	<img id="trafficLightGreen" class="trafficLightColor hidden" alt="Green" src="/images/traffic_light_green.svg" />
 </p>
 
-<p id="trafficLightRemainingTime"></p>
+<p id="trafficLightRemainingTime" style="z-index: 2;"></p>
 
 <script type="text/javascript">
 

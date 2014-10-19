@@ -5,6 +5,9 @@ Rails.application.routes.draw do
     collection do
       get :close_to
     end
+    member do
+      get :data_points
+    end
   end
 
   resources :data_points, only: :create do

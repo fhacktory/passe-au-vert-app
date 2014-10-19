@@ -1,6 +1,6 @@
 class TrafficLightsController < ApplicationController
 
-  before_action :set_traffic_light, only: :show
+  before_action :set_traffic_light, only: [:data_points, :show]
 
   CLOSES_LIMIT = 100
   MINIMAL_FIELDS = [:id, :latitude, :longitude]
@@ -15,6 +15,9 @@ class TrafficLightsController < ApplicationController
   end
 
   def show
+  end
+
+  def data_points
   end
 
   private

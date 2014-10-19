@@ -1,35 +1,53 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
 
-<p id="dataPointSent" class="hidden">Rapport n°<span id="dataPointId"></span> envoyé, merci.</p>
+<% if @traffic_light.state_at %>
+	<p id="trafficLightRed" clas="trafficLightColor"><button id="dataPointRed" class="dataPointReport">Rouge</button></p>
+	<p id="trafficLightOrange" clas="trafficLightColor"><button id="dataPointOrange" class="dataPointReport">Orange</button></p>
+	<p id="trafficLightGreen" clas="trafficLightColor"><button id="dataPointGreen" class="dataPointReport">Green</button></p>
 
-<p><button id="dataPointRed" class="dataPointReport">Rouge</button></p>
-<p><button id="dataPointOrange" class="dataPointReport">Orange</button></p>
-<p><button id="dataPointGreen" class="dataPointReport">Green</button></p>
+	<p id="trafficLightRemainingTime"></p>
+<% else %>
+  <p>Données indisponibles pour ce feu.</p>
+<% end %>
 
 <script type="text/javascript">
 
-var traffic_light_id = <%= @traffic_light.id %>;
+var state = <%= @traffic_light.state_at[:state].to_s.camelize %>;
 
-function sendDataPoint(changedState) {
-  return function() {
-	  	$.ajax({ url: '<%= data_points_path %>?traffic_light_id='+ traffic_light_id +'&changed_state='+ changedState }).done(function (data) {
-	  		$('#dataPointId').html(data);
-	  		$('#dataPointSent').show();
-	  });
-  };
+var cycle_time = <%= @traffic_light.cycle_time %> * 1000;
+var green_time = <%= @traffic_light.green_time %> * 1000;
+var orange_time = 2000;
+var red_time = cycle_time - green_time - orange_time;
+
+var remaining_time = <%= @traffic_light.state_at[:remaining_time] %> * 1000;
+
+var interval = 300;
+
+function nextState() {
+	if (state === "Red") {
+		remaining_time = green_time + remaining_time;
+		state = "Green";
+	} else if (state === "Green") {
+		remaining_time = orange_time + remaining_time;
+		state = "Orange";
+	} else {
+		red_time = orange_time + remaining_time;
+		state = "Red";
+	}
+
+	$('.trafficLightColor').hide();
+	$('#trafficLight' + state).show();
 }
 
-$(function() {
-   $('#dataPointRed').click(sendDataPoint('orange_to_red'));
-   $('#dataPointOrange').click(sendDataPoint('green_to_orange'));
-   $('#dataPointGreen').click(sendDataPoint('red_to_green'));
-});
+function updateTrafficLigth() {
+	remaining_time -= interval;
+	if (remaining_time < 0) {
+		nextState();
+	}
+	
+	$('#trafficLightRemainingTime').html((remaining_time / 1000) + 's');
+}
+
+setInterval(updateTrafficLigth, interval);
 
 </script>
-
-<% if @traffic_light.computed_data? %>
-	<h3>Informations</h3>
-	<% if @traffic_light.cycle_time %><p>Temps de cycle: <%= @traffic_light.cycle_time %>s</p><% end %>
-	<% if @traffic_light.green_time %><p>Durée du vert: <%= @traffic_light.green_time %>s</p><% end %>
-	<% if @traffic_light.offset %><p>Décalage: <%= @traffic_light.offset %>s</p><% end %>
-<% end %>

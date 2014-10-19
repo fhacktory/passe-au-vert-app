@@ -1,0 +1,35 @@
+<h2>Feu n°<%= @traffic_light.id %></h2>
+
+<p id="dataPointSent" class="hidden">Rapport n°<span id="dataPointId"></span> envoyé, merci.</p>
+
+<p><button id="dataPointRed" class="dataPointReport">Rouge</button></p>
+<p><button id="dataPointOrange" class="dataPointReport">Orange</button></p>
+<p><button id="dataPointGreen" class="dataPointReport">Green</button></p>
+
+<script type="text/javascript">
+
+var traffic_light_id = <%= @traffic_light.id %>;
+
+function sendDataPoint(changedState) {
+  return function() {
+	  	$.ajax({ url: '<%= data_points_path %>?traffic_light_id='+ traffic_light_id +'&changed_state='+ changedState }).done(function (data) {
+	  		$('#dataPointId').html(data);
+	  		$('#dataPointSent').show();
+	  });
+  };
+}
+
+$(function() {
+   $('#dataPointRed').click(sendDataPoint('orange_to_red'));
+   $('#dataPointOrange').click(sendDataPoint('green_to_orange'));
+   $('#dataPointGreen').click(sendDataPoint('red_to_green'));
+});
+
+</script>
+
+<% if @traffic_light.computed_data? %>
+	<h3>Informations</h3>
+	<% if @traffic_light.cycle_time %><p>Temps de cycle: <%= @traffic_light.cycle_time %>s</p><% end %>
+	<% if @traffic_light.green_time %><p>Durée du vert: <%= @traffic_light.green_time %>s</p><% end %>
+	<% if @traffic_light.offset %><p>Décalage: <%= @traffic_light.offset %>s</p><% end %>
+<% end %>

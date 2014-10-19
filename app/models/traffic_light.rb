@@ -142,6 +142,10 @@ class TrafficLight < ActiveRecord::Base
     end
   end
 
+  def state
+    state_at
+  end
+
 	def to_map_info
     {
       id: id,

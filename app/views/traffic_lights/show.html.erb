@@ -1,6 +1,6 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
 
-<% if @traffic_light.state_at %>
+<% if traffic_light_state = @traffic_light.state %>
 	<p id="trafficLightRed" clas="trafficLightColor"><button class="dataPointReport">Rouge</button></p>
 	<p id="trafficLightOrange" clas="trafficLightColor"><button class="dataPointReport">Orange</button></p>
 	<p id="trafficLightGreen" clas="trafficLightColor"><button class="dataPointReport">Green</button></p>
@@ -12,14 +12,14 @@
 
 <script type="text/javascript">
 
-var state = <%= @traffic_light.state_at[:state].to_s.camelize %>;
+var state = <%= traffic_light_state[:state].to_s.camelize %>;
 
 var cycle_time = <%= @traffic_light.cycle_time %> * 1000;
 var green_time = <%= @traffic_light.green_time %> * 1000;
 var orange_time = 2000;
 var red_time = cycle_time - green_time - orange_time;
 
-var remaining_time = <%= @traffic_light.state_at[:remaining_time] %> * 1000;
+var remaining_time = <%= traffic_light_state[:remaining_time] %> * 1000;
 
 var interval = 300;
 

@@ -113,7 +113,7 @@ function updateMyPositionMarker(position) {
 function trafficLightContent(trafficLight) {
   return '<a href="<%= traffic_light_path(id: '') %>'+ trafficLight.id +'" style="text-decoration: none;"><strong>Feu n°'+ trafficLight.id +'</strong></a><br>'
           +'Position: '+ trafficLight.latitude +', '+ trafficLight.longitude+'<br>'
-          +'<a href="'+ '<%= data_points_traffic_light(id: 888) %>'.replace(888, trafficLight.id) +'" style="text-decoration: none;">Contribuer</a>';
+          +'<a href="'+ '<%= data_points_traffic_light_path(id: 888) %>'.replace(888, trafficLight.id) +'" style="text-decoration: none;">Contribuer</a>';
 
 }
 

@@ -14,7 +14,7 @@ var state = "<%= traffic_light_state[:state].to_s.camelize %>";
 var cycle_time = <%= @traffic_light.cycle_time %> * 1000;
 var green_time = <%= @traffic_light.green_time %> * 1000;
 var orange_time = 2000;
-var red_time = cycle_time - green_time - orange_time;
+var red_time = cycle_time * 1000 - green_time - orange_time;
 
 var remaining_time = <%= traffic_light_state[:remaining_time] %> * 1000;
 

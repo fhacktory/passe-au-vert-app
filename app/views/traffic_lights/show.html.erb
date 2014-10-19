@@ -32,13 +32,15 @@ var updateTrafficLigth;
 function updateCountdown() {
 	var seconds = remaining_time / 1000;
 
+	/*
 	$('#countdown').countdown360({
 		radius      : parseInt(seconds),
 		seconds     : Math.floor(seconds * 100) / 100,
 		fontColor   : stateColor[state],
 		autostart   : false,
-		onComplete  : function() { /*$('#countdown').hide();*/ }
+		onComplete  : function() { } // $('#countdown').hide();
 	}).start();
+	*/
 }
 
 function nextState() {

@@ -60,7 +60,7 @@ $(function() {
 
 		$('#countdown').countdown360({
 			radius      : parseInt(seconds),
-			seconds     : (seconds / 100) % 100,
+			seconds     : Math.floor(seconds * 100) / 100,
 			fontColor   : '#FFFFFF',
 			autostart   : true,
 			onComplete  : function() { $('#countdown').hide(); }

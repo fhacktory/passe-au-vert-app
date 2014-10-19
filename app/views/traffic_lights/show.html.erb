@@ -53,11 +53,11 @@ function updateTrafficLigth() {
 		nextState();
 	}
 	
-	seconds = remaining_time / 1000;
-	$('.trafficLightRemainingTime').html(seconds.toFixed(2) + ' s');
+	seconds = (remaining_time / 1000).toFixed(2);
+	$('.trafficLightRemainingTime').html(seconds + ' s');
 
 	$('#countdown').countdown360({
-		radius      : 60,
+		radius      : parseInt(seconds),
 		seconds     : seconds,
 		fontColor   : '#FFFFFF',
 		autostart   : true,

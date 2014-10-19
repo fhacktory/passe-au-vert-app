@@ -30,7 +30,7 @@
       this.startedAt = new Date();
       this._drawCountdownShape(Math.PI*3.5, true);
       this._drawCountdownLabel(0);
-      this.interval = setInterval(jQuery.proxy(this._draw, this), 1000);
+      this.interval = setInterval(jQuery.proxy(this._draw, this), 150);
     },
 
     stop: function (cb) {

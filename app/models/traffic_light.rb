@@ -119,11 +119,11 @@ class TrafficLight < ActiveRecord::Base
   end
 
   def state_at(time = Time.now, reload = true)
-    return @state_at if @state_at
+    return @state_at if defined? @state_at
 
     @state_at = if offset && cycle_time && green_time
 
-      time_offset = (time - offset) % cycle_time
+      time_offset = (time.to_i - offset) % cycle_time
       if time_offset < green_time
         state = :green
         remaining_time = green_time - time_offset

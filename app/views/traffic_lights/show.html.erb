@@ -1,9 +1,9 @@
 <h2>Feu n°<%= @traffic_light.id %></h2>
 
 <% if @traffic_light.state_at %>
-	<p id="trafficLightRed" clas="trafficLightColor"><button id="dataPointRed" class="dataPointReport">Rouge</button></p>
-	<p id="trafficLightOrange" clas="trafficLightColor"><button id="dataPointOrange" class="dataPointReport">Orange</button></p>
-	<p id="trafficLightGreen" clas="trafficLightColor"><button id="dataPointGreen" class="dataPointReport">Green</button></p>
+	<p id="trafficLightRed" clas="trafficLightColor"><button class="dataPointReport">Rouge</button></p>
+	<p id="trafficLightOrange" clas="trafficLightColor"><button class="dataPointReport">Orange</button></p>
+	<p id="trafficLightGreen" clas="trafficLightColor"><button class="dataPointReport">Green</button></p>
 
 	<p id="trafficLightRemainingTime"></p>
 <% else %>

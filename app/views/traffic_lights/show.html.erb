@@ -61,9 +61,9 @@ $(function() {
 		$('#countdown').countdown360({
 			radius      : parseInt(seconds),
 			seconds     : Math.floor(seconds * 100) / 100,
-			fontColor   : '#FFFFFF',
-			autostart   : true,
-			onComplete  : function() { $('#countdown').hide(); }
+			fontColor   : stateColor[state],
+			autostart   : false,
+			onComplete  : function() { /*$('#countdown').hide();*/ }
 		}).start();
 	}
 

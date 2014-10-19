@@ -1,4 +1,4 @@
-<h2>Feu n°<%= @traffic_light.id %></h2>
+<h2 class="trafficLightRemainingTime"></h2>
 
 <% if traffic_light_state = @traffic_light.state %>
 
@@ -9,7 +9,6 @@
 </p>
 
 <div id="countdown"></div>
-<p class="trafficLightRemainingTime" style="z-index: 2;"></p>
 
 <script type="text/javascript">
 
@@ -44,6 +43,14 @@ function nextState() {
 
 	$('.trafficLightColor').hide();
 	$('#trafficLight' + state).show();
+
+	$('#countdown').countdown360({
+		radius      : parseInt(seconds),
+		seconds     : Math.floor(seconds * 100) / 100,
+		fontColor   : stateColor[state],
+		autostart   : false,
+		onComplete  : function() { /*$('#countdown').hide();*/ }
+	}).start();
 }
 
 $(function() {
@@ -57,15 +64,7 @@ $(function() {
 		
 		seconds = remaining_time / 1000;
 		$('.trafficLightRemainingTime').html(seconds.toFixed(2) + ' s');
-
-		$('#countdown').countdown360({
-			radius      : parseInt(seconds),
-			seconds     : Math.floor(seconds * 100) / 100,
-			fontColor   : stateColor[state],
-			autostart   : false,
-			onComplete  : function() { /*$('#countdown').hide();*/ }
-		}).start();
-	}
+	};
 
 	$('#trafficLight' + state).show();
 	setInterval(updateTrafficLigth, interval);
@@ -77,4 +76,5 @@ $(function() {
   <p>Données indisponibles pour ce feu.</p>
 <% end %>
 
+<h3>Feu n°<%= @traffic_light.id %></h3>
 <p><%= link_to 'Contribuer', data_points_traffic_light_path(@traffic_light) %></p>

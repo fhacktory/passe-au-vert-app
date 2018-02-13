@@ -1,6 +1,6 @@
 # README
 
-[ ![Codeship Status for fhacktory/passe-au-vert](https://www.codeship.io/projects/f3079710-38ed-0132-bd39-323ac9d2f255/status)](https://www.codeship.io/projects/42120)
+[![Build Status](https://travis-ci.org/fhacktory/passe-au-vert-app.svg?branch=master)](https://travis-ci.org/fhacktory/passe-au-vert-app)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.

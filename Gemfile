@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.3'
+ruby '>= 2.1.0'
 
 # Use Unicorn as the app server
 gem 'unicorn'
